@@ -3,6 +3,30 @@ const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
+const errorModal = document.getElementById('modal')
+errorModal.setAttribute('class', 'hidden')
+const allHearts = document.querySelectorAll('.like-glyph')
+for (let heart of allHearts) { heart.addEventListener('click', handleClick) }
+function handleClick(e){
+  mimicServerCall()
+    .then(heartStatus(e))
+    .catch(error => {
+      errorModal.innerHTML = error
+      errorModal.className = ''
+      setTimeout(() => errorModal.className = "hidden", 3000)
+    })
+}
+function heartStatus(e){
+  const heart = e.target
+  if(heart.innerText === EMPTY_HEART){
+    heart.inner.Text = FULL_HEART
+    heart.classList.add('activated-heart')
+  }
+  else{
+    heart.innerText = EMPTY_HEART
+    heart.classList.remove('activated-heart')
+  }
+}
 
 
 
@@ -11,9 +35,9 @@ const FULL_HEART = '♥'
 // Don't change the code below: this function mocks the server response
 //------------------------------------------------------------------------------
 
-function mimicServerCall(url="http://mimicServer.example.com", config={}) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
+function mimicServerCall(url = "http://mimicServer.example.com", config = {}) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
       let isRandomFailure = Math.random() < .2
       if (isRandomFailure) {
         reject("Random server error. Try again.");
